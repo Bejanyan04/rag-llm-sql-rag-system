@@ -1,0 +1,52 @@
+[
+  {
+    "question": "How many clients are there?",
+    "expected_sql": "SELECT COUNT(*) AS cnt FROM Clients;",
+    "expected_answer": "The result is 20."
+  },
+  {
+    "question": "List all client names and their countries.",
+    "expected_sql": "SELECT client_name, country FROM Clients;",
+    "expected_answer": "Total 20 rows. First few:    client_name country\n     Acme Corp     USA\n  Bright Legal      UK\nSummit Finance     USA."
+  },
+  {
+    "question": "How many invoices are there in total?",
+    "expected_sql": "SELECT COUNT(*) AS cnt FROM Invoices;",
+    "expected_answer": "The result is 40."
+  },
+  {
+    "question": "What are the distinct industries in the Clients table?",
+    "expected_sql": "SELECT DISTINCT industry FROM Clients ORDER BY industry;",
+    "expected_answer": "Total 18 rows. First few:    industry\nAgriculture\n Consulting\n  Education."
+  },
+  {
+    "question": "How many line items are there in total?",
+    "expected_sql": "SELECT COUNT(*) AS cnt FROM InvoiceLineItems;",
+    "expected_answer": "The result is 96."
+  },
+  {
+    "question": "For each invoice status, how many invoices have that status?",
+    "expected_sql": "SELECT status, COUNT(*) AS cnt FROM Invoices GROUP BY status;",
+    "expected_answer": "Total 3 rows.  status  cnt\n  Draft    6\nOverdue    9\n   Paid   25"
+  },
+  {
+    "question": "Which countries do we have clients in?",
+    "expected_sql": "SELECT DISTINCT country FROM Clients ORDER BY country;",
+    "expected_answer": "Total 15 rows. First few:   country\nAustralia\n   Brazil\n   Canada."
+  },
+  {
+    "question": "How many invoices were issued in 2024?",
+    "expected_sql": "SELECT COUNT(*) AS cnt FROM Invoices WHERE strftime('%Y', invoice_date) = '2024';",
+    "expected_answer": "The result is 40."
+  },
+  {
+    "question": "What is the total number of line items for invoice I1001?",
+    "expected_sql": "SELECT COUNT(*) AS cnt FROM InvoiceLineItems WHERE invoice_id = 'I1001';",
+    "expected_answer": "The result is 3."
+  },
+  {
+    "question": "List client name and industry for the first three clients by client_id.",
+    "expected_sql": "SELECT client_name, industry FROM Clients ORDER BY client_id LIMIT 3;",
+    "expected_answer": "Total 3 rows.    client_name           industry\n     Acme Corp      Manufacturing\n  Bright Legal              Legal\nSummit Finance Financial Services"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {"question": "How many clients?", "sql": "SELECT COUNT(*) AS cnt FROM Clients;"},
+  {"question": "List all countries from clients.", "sql": "SELECT DISTINCT country FROM Clients ORDER BY country;"},
+  {"question": "Count of invoices per status.", "sql": "SELECT status, COUNT(*) AS cnt FROM Invoices GROUP BY status;"},
+  {"question": "How many line items?", "sql": "SELECT COUNT(*) AS cnt FROM InvoiceLineItems;"},
+  {"question": "Show client names and industry.", "sql": "SELECT client_name, industry FROM Clients;"},
+  {"question": "List invoice IDs and status.", "sql": "SELECT invoice_id, status FROM Invoices LIMIT 10;"}
+]

@@ -1,0 +1,294 @@
+question,sql,agent_final_response
+List all clients with their industries.,"SELECT client_name, industry FROM Clients LIMIT 500;","Here is the list of all clients along with their industries:
+
+1. Acme Corp - Manufacturing
+2. Bright Legal - Legal
+3. Summit Finance - Financial Services
+4. GreenField Retail - Retail
+5. Northwind Logistics - Logistics
+6. BlueSky Consulting - Consulting
+7. Nova Health - Healthcare
+8. Urban Tech - Technology
+9. RedRock Energy - Energy
+10. Silverline Media - Media
+11. Zenith Education - Education
+12. Alpine Hospitality - Hospitality
+13. Orion Security - Security
+14. Pacific Foods - Food & Beverage
+15. Metro Transport - Transportation
+16. Vertex Analytics - Technology
+17. Harbor Insurance - Insurance
+18. Crescent Pharma - Pharmaceuticals
+19. Aurora Textiles - Manufacturing
+20. Prairie Agriculture - Agriculture"
+Which clients are based in the UK?,SELECT client_name FROM Clients WHERE country = 'UK' LIMIT 500;,"The clients based in the UK are:
+
+1. Bright Legal
+2. Silverline Media"
+List all invoices issued in March 2024 with their statuses.,"SELECT invoice_id, status FROM Invoices WHERE strftime('%Y-%m', invoice_date) = '2024-03' LIMIT 500;","The invoices issued in March 2024 and their statuses are as follows:
+
+1. Invoice ID: I1003 - Status: Paid
+2. Invoice ID: I1004 - Status: Paid"
+"Which invoices are currently marked as ""Overdue""?","SELECT invoice_id, client_id, invoice_date, due_date, status FROM Invoices WHERE due_date < date('now') AND status != 'Paid' LIMIT 500;","The invoices currently marked as ""Overdue"" are:
+
+1. Invoice ID: I1002
+   - Client ID: C002
+   - Invoice Date: 2024-02-15
+   - Due Date: 2024-03-15
+
+2. Invoice ID: I1005
+   - Client ID: C004
+   - Invoice Date: 2024-04-01
+   - Due Date: 2024-05-01
+
+3. Invoice ID: I1009
+   - Client ID: C008
+   - Invoice Date: 2024-06-01
+   - Due Date: 2024-07-01
+
+4. Invoice ID: I1013
+   - Client ID: C012
+   - Invoice Date: 2024-07-20
+   - Due Date: 2024-08-19
+
+5. Invoice ID: I1015
+   - Client ID: C014
+   - Invoice Date: 2024-08-10
+   - Due Date: 2024-09-09
+
+6. Invoice ID: I1020
+   - Client ID: C019
+   - Invoice Date: 2024-10-01
+   - Due Date: 2024-10-31
+
+7. Invoice ID: I1028
+   - Client ID: C007
+   - Invoice Date: 2024-11-15
+   - Due Date: 2024-12-15
+
+8. Invoice ID: I1032
+   - Client ID: C011
+   - Invoice Date: 2024-12-05
+   - Due Date: 2025-01-04
+
+9. Invoice ID: I1038
+   - Client ID: C017
+   - Invoice Date: 2024-12-26
+   - Due Date: 2025-01-25"
+"For each service_name in InvoiceLineItems, how many line items are there?","SELECT service_name, COUNT(*) AS line_item_count FROM InvoiceLineItems GROUP BY service_name;","Here is the count of line items for each service name in InvoiceLineItems:
+
+- Contract Review: 11 line items
+- Court Appearance: 13 line items
+- Custom Reporting: 11 line items
+- IT Security Assessment: 14 line items
+- M&A Advisory: 16 line items
+- Regulatory Compliance Audit: 10 line items
+- Tax Planning: 14 line items
+- Training Session: 7 line items"
+"List all invoices for Acme Corp with their invoice IDs, invoice dates, due dates, and statuses.","SELECT Invoices.invoice_id, Invoices.invoice_date, Invoices.due_date, Invoices.status 
+FROM Invoices 
+JOIN Clients ON Invoices.client_id = Clients.client_id 
+WHERE Clients.client_name = 'Acme Corp' 
+LIMIT 500;","Here are the invoices for Acme Corp:
+
+1. **Invoice ID:** I1001
+   - **Invoice Date:** 2024-01-10
+   - **Due Date:** 2024-02-10
+   - **Status:** Paid
+
+2. **Invoice ID:** I1004
+   - **Invoice Date:** 2024-03-20
+   - **Due Date:** 2024-04-20
+   - **Status:** Paid
+
+3. **Invoice ID:** I1022
+   - **Invoice Date:** 2024-10-15
+   - **Due Date:** 2024-11-14
+   - **Status:** Paid"
+"Show all invoices issued to Bright Legal in February 2024, including their status and currency.","SELECT Invoices.invoice_id, Invoices.status, Invoices.currency 
+FROM Invoices 
+JOIN Clients ON Invoices.client_id = Clients.client_id 
+WHERE Clients.client_name = 'Bright Legal' 
+AND strftime('%Y-%m', Invoices.invoice_date) = '2024-02' 
+LIMIT 500;","The invoice issued to Bright Legal in February 2024 is as follows:
+
+- **Invoice ID:** I1002
+- **Status:** Overdue
+- **Currency:** EUR"
+"For invoice I1001, list all line items with service name, quantity, unit price, tax rate, and compute the line total (including tax) for each.","SELECT 
+    service_name, 
+    quantity, 
+    unit_price, 
+    tax_rate, 
+    (quantity * unit_price * (1 + tax_rate)) AS line_total 
+FROM 
+    InvoiceLineItems 
+WHERE 
+    invoice_id = 'I1001' 
+LIMIT 500;","For invoice I1001, the line items are as follows:
+
+1. **Service Name:** Court Appearance
+   - **Quantity:** 1
+   - **Unit Price:** 500
+   - **Tax Rate:** 20%
+   - **Line Total (including tax):** 600.0
+
+2. **Service Name:** M&A Advisory
+   - **Quantity:** 2
+   - **Unit Price:** 200
+   - **Tax Rate:** 0%
+   - **Line Total (including tax):** 400.0
+
+3. **Service Name:** Court Appearance
+   - **Quantity:** 5
+   - **Unit Price:** 300
+   - **Tax Rate:** 0%
+   - **Line Total (including tax):** 1500.0"
+"For each client, compute the total amount billed in 2024 (including tax) across all their invoices.","SELECT c.client_id, c.client_name, SUM(ili.quantity * ili.unit_price * (1 + ili.tax_rate)) AS total_billed
+FROM Clients c
+JOIN Invoices i ON c.client_id = i.client_id
+JOIN InvoiceLineItems ili ON i.invoice_id = ili.invoice_id
+WHERE strftime('%Y', i.invoice_date) = '2024'
+GROUP BY c.client_id, c.client_name
+LIMIT 500;","The total amount billed in 2024 (including tax) across all invoices for each client is as follows:
+
+1. Acme Corp: $6830.00
+2. Bright Legal: $3590.00
+3. Summit Finance: $2582.00
+4. GreenField Retail: $3287.50
+5. Northwind Logistics: $2426.50
+6. BlueSky Consulting: $5757.50
+7. Nova Health: $3696.00
+8. Urban Tech: $2632.00
+9. RedRock Energy: $5506.00
+10. Silverline Media: $3830.00
+11. Zenith Education: $5407.50
+12. Alpine Hospitality: $3398.50
+13. Orion Security: $4062.50
+14. Pacific Foods: $2037.50
+15. Metro Transport: $3310.00
+16. Vertex Analytics: $6106.00
+17. Harbor Insurance: $3487.50
+18. Crescent Pharma: $2401.50
+19. Aurora Textiles: $5104.00
+20. Prairie Agriculture: $2051.50"
+"Which client has the highest total billed amount in 2024, and what is that total?","SELECT c.client_name, SUM(ili.quantity * ili.unit_price) AS total_billed
+FROM Clients c
+JOIN Invoices i ON c.client_id = i.client_id
+JOIN InvoiceLineItems ili ON i.invoice_id = ili.invoice_id
+WHERE strftime('%Y', i.invoice_date) = '2024'
+GROUP BY c.client_id
+ORDER BY total_billed DESC
+LIMIT 1;","The client with the highest total billed amount in 2024 is Acme Corp, with a total of $6,400."
+"Across all clients, which three services generated the most revenue in 2024? Show the total revenue per service.","SELECT service_name, SUM(quantity * unit_price) AS total_revenue 
+FROM InvoiceLineItems 
+JOIN Invoices ON InvoiceLineItems.invoice_id = Invoices.invoice_id 
+WHERE strftime('%Y', Invoices.invoice_date) = '2024' 
+GROUP BY service_name 
+ORDER BY total_revenue DESC 
+LIMIT 3;","The three services that generated the most revenue in 2024 are:
+
+1. Court Appearance: $11,100
+2. M&A Advisory: $10,600
+3. Tax Planning: $10,550"
+"Which invoices are overdue as of 2024-12-31? List invoice ID, client name, invoice_date, due_date, and status.","SELECT Invoices.invoice_id, Clients.client_name, Invoices.invoice_date, Invoices.due_date, Invoices.status 
+FROM Invoices 
+JOIN Clients ON Invoices.client_id = Clients.client_id 
+WHERE Invoices.due_date < '2024-12-31' AND Invoices.status != 'Paid' 
+LIMIT 500;","The following invoices are overdue as of 2024-12-31:
+
+1. Invoice ID: I1002
+   - Client Name: Bright Legal
+   - Invoice Date: 2024-02-15
+   - Due Date: 2024-03-15
+   - Status: Overdue
+
+2. Invoice ID: I1005
+   - Client Name: GreenField Retail
+   - Invoice Date: 2024-04-01
+   - Due Date: 2024-05-01
+   - Status: Overdue
+
+3. Invoice ID: I1009
+   - Client Name: Urban Tech
+   - Invoice Date: 2024-06-01
+   - Due Date: 2024-07-01
+   - Status: Overdue
+
+4. Invoice ID: I1013
+   - Client Name: Alpine Hospitality
+   - Invoice Date: 2024-07-20
+   - Due Date: 2024-08-19
+   - Status: Overdue
+
+5. Invoice ID: I1015
+   - Client Name: Pacific Foods
+   - Invoice Date: 2024-08-10
+   - Due Date: 2024-09-09
+   - Status: Overdue
+
+6. Invoice ID: I1020
+   - Client Name: Aurora Textiles
+   - Invoice Date: 2024-10-01
+   - Due Date: 2024-10-31
+   - Status: Overdue
+
+7. Invoice ID: I1028
+   - Client Name: Nova Health
+   - Invoice Date: 2024-11-15
+   - Due Date: 2024-12-15
+   - Status: Overdue"
+"Group revenue by client country: for each country, compute the total billed amount in 2024 (including tax).","SELECT c.country, SUM(il.quantity * il.unit_price * (1 + il.tax_rate)) AS total_revenue
+FROM Clients c
+JOIN Invoices i ON c.client_id = i.client_id
+JOIN InvoiceLineItems il ON i.invoice_id = il.invoice_id
+WHERE strftime('%Y', i.invoice_date) = '2024'
+GROUP BY c.country
+LIMIT 500;","The total billed amount in 2024, grouped by client country, is as follows:
+
+- Australia: 5757.5
+- Brazil: 2051.5
+- Canada: 2426.5
+- France: 4062.5
+- Germany: 3287.5
+- India: 2401.5
+- Ireland: 6106.0
+- Netherlands: 2632.0
+- New Zealand: 2037.5
+- Norway: 5506.0
+- Portugal: 5104.0
+- Spain: 3310.0
+- Switzerland: 3398.5
+- UK: 7420.0
+- USA: 22003.0"
+"For the service ""Contract Review"", list all clients who purchased it and the total amount they paid for that service (including tax).","SELECT c.client_name, SUM(il.quantity * il.unit_price * (1 + il.tax_rate)) AS total_paid
+FROM Clients c
+JOIN Invoices i ON c.client_id = i.client_id
+JOIN InvoiceLineItems il ON i.invoice_id = il.invoice_id
+WHERE il.service_name = 'Contract Review'
+GROUP BY c.client_name
+LIMIT 500;","The clients who purchased the service ""Contract Review"" and the total amount they paid (including tax) are as follows:
+
+1. Aurora Textiles: $2200.00
+2. BlueSky Consulting: $907.50
+3. Bright Legal: $220.00
+4. Nova Health: $360.00
+5. Orion Security: $1812.50
+6. Pacific Foods: $800.00
+7. Prairie Agriculture: $181.50
+8. Silverline Media: $220.00
+9. Summit Finance: $600.00
+10. Zenith Education: $600.00"
+"Considering only European clients, what are the top 3 services by total revenue (including tax) in H2 2024 (2024-07-01 to 2024-12-31)?","SELECT service_name, SUM(quantity * unit_price * (1 + tax_rate)) AS total_revenue
+FROM Clients
+JOIN Invoices ON Clients.client_id = Invoices.client_id
+JOIN InvoiceLineItems ON Invoices.invoice_id = InvoiceLineItems.invoice_id
+WHERE Clients.country IN ('UK', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands', 'Belgium', 'Portugal', 'Poland', 'Sweden', 'Austria', 'Ireland', 'Denmark', 'Finland', 'Greece', 'Romania', 'Czech Republic', 'Czechia', 'Hungary', 'Switzerland', 'Norway', 'Ukraine', 'Bulgaria', 'Croatia', 'Slovakia', 'Slovenia', 'Lithuania', 'Latvia', 'Estonia', 'Luxembourg', 'Malta', 'Cyprus', 'Iceland', 'Serbia', 'Bosnia and Herzegovina', 'Albania', 'North Macedonia', 'Montenegro', 'Kosovo', 'Moldova', 'Belarus', 'Russia', 'Andorra', 'Monaco', 'San Marino', 'Vatican City')
+AND Invoices.invoice_date BETWEEN '2024-07-01' AND '2024-12-31'
+GROUP BY service_name
+ORDER BY total_revenue DESC
+LIMIT 3;","The top 3 services by total revenue (including tax) for European clients in H2 2024 are:
+
+1. Tax Planning: $7360.00
+2. Regulatory Compliance Audit: $4486.00
+3. Contract Review: $4232.50"
